@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect
 from surveys import surveys, Question
 from flask_debugtoolbar import DebugToolbarExtension
+from flask import session
 # from tkinter import *
 # from tkinter.ttk import *
 
@@ -22,16 +23,18 @@ def start_survey():
 def display(num):
     q= surveys['satisfaction'].questions[num]
     ans=Question(q, choices=None)
+
     return render_template('/questions.html', survey_q=q.question, answer0=ans.choices[0], 
             answer1=ans.choices[1])
 
 @app.route('/questions/<int:num>', methods=['POST'])
 def answer(num):
     num=0
-    responses.append(request.form['tally'])
+    session['response']=request.form['tally']
+    responses.append(session['response'])
     num+=1
     print(responses)
-    return redirect('/questions/{}'.format(num)), responses
+    return redirect('/questions/{}'.format(num))
 
 @app.route('/questions/2')
 def show():
