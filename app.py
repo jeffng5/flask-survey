@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect
 from surveys import surveys, Question
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 from flask import session
 # from tkinter import *
 # from tkinter.ttk import *
@@ -9,9 +9,7 @@ from flask import session
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'nowayJose'
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS']=False
-debug= DebugToolbarExtension(app)
-
-
+# debug= DebugToolbarExtension(app)
 
 responses=[]
 
@@ -29,18 +27,22 @@ def display(num):
 
 @app.route('/questions/<int:num>', methods=['POST'])
 def answer(num):
-    num=0
     session['response']=request.form['tally']
     responses.append(session['response'])
-    num+=1
     print(responses)
-    return redirect('/questions/{}'.format(num))
+    return redirect('/questions/{}'.format(num+1))
 
 @app.route('/questions/2')
 def show():
     stuff=Question(question="On average, how much do you spend a month on frisbees?", choices=[['Less than $10,000'], ['$10,000 or more']])
     return render_template('oddQ.html', odd_q= stuff.question, answer2=stuff.choices[0], answer3=stuff.choices[1] )
 
+@app.route('/questions/4')
+def end():
+    return render_template('thank_you.html')
+    
+
+
+
 
     
-     
